@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserController } from '../controllers/user.controller';
+import { User } from './entities/user.entity';
+import { UserService } from './services/user.service';
 
 @Module({
-  imports: [CqrsModule],
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [UserService],
+  controllers: [UserController],
 })
 export class BlogModule {}
