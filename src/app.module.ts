@@ -6,7 +6,7 @@ import { BlogModule } from './modules/blog/blog.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.dev.env',
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

@@ -8,8 +8,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { ResultDto } from 'src/shared/dtos/result.dto';
-import { User } from '../blog/entities/user.entity';
-import { UserService } from '../blog/services/user.service';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UserService } from '../services/user.service';
 
 @Controller('v1/users')
 export class UserController {
@@ -52,7 +52,7 @@ export class UserController {
   }
 
   @Post()
-  async create(@Body() model: User) {
+  async create(@Body() model: CreateUserDto) {
     try {
       await this.service.create(model);
       return new ResultDto(null, true, model, null);

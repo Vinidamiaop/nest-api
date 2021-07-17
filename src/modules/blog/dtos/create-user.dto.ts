@@ -1,3 +1,5 @@
+import { Role } from '../entities/role.entity';
+
 export class CreateUserDto {
   constructor(
     public firstName: string,
@@ -6,5 +8,6 @@ export class CreateUserDto {
     public passwordHash: string,
     public birthDate: Date,
     public slug = firstName.toLowerCase().trim(),
+    public roleId: Role,
   ) {}
 }
