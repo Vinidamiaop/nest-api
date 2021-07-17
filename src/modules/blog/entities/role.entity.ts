@@ -1,5 +1,4 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
 
 @Entity()
 export class Role {
@@ -12,6 +11,6 @@ export class Role {
   })
   name: string;
 
-  @Column({ length: 80 })
+  @Column({ length: 80, unique: true })
   slug: string;
 }

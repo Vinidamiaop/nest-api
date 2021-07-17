@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from '../entities/user.entity';
 import { slugify } from 'src/utils/slugify';
+import * as bcryptjs from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -16,9 +17,15 @@ export class UserService {
     return await this.repository.find();
   }
 
-  async getOne(id: string): Promise<User> {
+  async findById(id: string): Promise<User | undefined> {
     return await this.repository.findOne({
       where: { id: id },
+    });
+  }
+
+  async findByEmail(email: string): Promise<User | undefined> {
+    return await this.repository.findOne({
+      where: { email: email },
     });
   }
 
@@ -28,5 +35,21 @@ export class UserService {
 
     user.slug = slugify(`${user.firstName} ${user.lastName}`);
     await this.repository.save(user);
+  }
+
+  async authenticate(email: string, password: string): Promise<any> {
+    const user = await this.repository.find({
+      where: { email: email },
+      select: ['email', 'passwordHash'],
+    });
+    const passwordValidate = await bcryptjs.compare(
+      password,
+      user[0].passwordHash,
+    );
+    if (passwordValidate) {
+      return user[0];
+    } else {
+      return null;
+    }
   }
 }
