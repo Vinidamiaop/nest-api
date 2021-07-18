@@ -40,8 +40,10 @@ export class UserService {
   async authenticate(email: string, password: string): Promise<any> {
     const user = await this.repository.find({
       where: { email: email },
-      select: ['email', 'passwordHash'],
+      select: ['id', 'email', 'passwordHash', 'roleId'],
+      relations: ['roleId'],
     });
+
     const passwordValidate = await bcryptjs.compare(
       password,
       user[0].passwordHash,

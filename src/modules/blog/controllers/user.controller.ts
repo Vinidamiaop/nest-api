@@ -4,17 +4,25 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Param,
   Post,
+  Request,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+
+import { RolesAuthGuard } from 'src/shared/guards/roles-auth.guard';
+import { Roles } from 'src/shared/decorators/roles.decorator';
+import { Role } from 'src/shared/enums/role.enum';
 import { ResultDto } from 'src/shared/dtos/result.dto';
+
 import { AuthService } from 'src/shared/services/auth.service';
+import { UserService } from '../services/user.service';
+
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { User } from '../entities/user.entity';
+
 import { PasswordInterceptor } from '../interceptors/password.interceptor';
-import { UserService } from '../services/user.service';
 
 @Controller('v1/users')
 export class UserController {
@@ -23,6 +31,8 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
+  @UseGuards(RolesAuthGuard)
+  @Roles(Role.Admin)
   @Get()
   async findAll() {
     try {
@@ -40,11 +50,12 @@ export class UserController {
       );
     }
   }
-
-  @Get('/:id')
-  async findOneById(@Param('id') id: string) {
+  @UseGuards(RolesAuthGuard)
+  @Roles(Role.Admin, Role.Editor, Role.User)
+  @Get('/show')
+  async findOneById(@Request() req) {
     try {
-      const user = await this.service.findById(id);
+      const user = await this.service.findById(req.user.id);
       return new ResultDto(null, true, user, null);
     } catch (error) {
       throw new HttpException(
@@ -96,7 +107,7 @@ export class UserController {
       const token = await this.authService.createToken(
         user.id,
         user.email,
-        user.roleId,
+        user.roleId.slug,
       );
 
       return new ResultDto(null, true, token, null);

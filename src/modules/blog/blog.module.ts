@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AuthService } from 'src/shared/services/auth.service';
+
 import { JwtStrategy } from 'src/shared/strategies/jwt.strategy';
 import { RoleController } from './controllers/role.controller';
 import { UserController } from './controllers/user.controller';
@@ -26,7 +29,8 @@ import { UserService } from './services/user.service';
     }),
     TypeOrmModule.forFeature([User, Role]),
   ],
-  providers: [UserService, RoleService, AuthService, JwtStrategy],
   controllers: [UserController, RoleController],
+  providers: [UserService, RoleService, AuthService, JwtStrategy],
+  exports: [AuthService],
 })
 export class BlogModule {}
