@@ -22,7 +22,9 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { User } from '../entities/user.entity';
 
-import { PasswordInterceptor } from '../interceptors/password.interceptor';
+import { ValidatorInterceptor } from 'src/shared/interceptors/validator.interceptor';
+import { CreateUserContract } from '../contracts/user/create-user.contract';
+import { AuthUserContract } from '../contracts/user/auth-user.contract';
 
 @Controller('v1/users')
 export class UserController {
@@ -70,7 +72,7 @@ export class UserController {
     }
   }
 
-  @UseInterceptors(PasswordInterceptor)
+  @UseInterceptors(new ValidatorInterceptor(new CreateUserContract()))
   @Post()
   async create(@Body() model: CreateUserDto) {
     try {
@@ -89,6 +91,7 @@ export class UserController {
     }
   }
 
+  @UseInterceptors(new ValidatorInterceptor(new AuthUserContract()))
   @Post('authenticate')
   async authenticate(@Body() model: LoginUserDto): Promise<any> {
     try {

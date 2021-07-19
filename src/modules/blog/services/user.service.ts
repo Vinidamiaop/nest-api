@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -34,6 +34,7 @@ export class UserService {
     // tirando os acentos e colocando tudo em lower case.
 
     user.slug = slugify(`${user.firstName} ${user.lastName}`);
+    user.passwordHash = await bcryptjs.hash(user.passwordHash, 10);
     await this.repository.save(user);
   }
 
@@ -43,6 +44,12 @@ export class UserService {
       select: ['id', 'email', 'passwordHash', 'roleId'],
       relations: ['roleId'],
     });
+
+    if (user.length === 0)
+      throw new HttpException(
+        'Usuário ou senha inválidos',
+        HttpStatus.NOT_FOUND,
+      );
 
     const passwordValidate = await bcryptjs.compare(
       password,
