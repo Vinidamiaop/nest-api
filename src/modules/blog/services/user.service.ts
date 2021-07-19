@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from '../entities/user.entity';
-import { slugify } from 'src/utils/slugify';
 import * as bcryptjs from 'bcryptjs';
 
 @Injectable()
@@ -33,10 +32,8 @@ export class UserService {
     // TODO: Criar uma função para criar slugs
     // tirando os acentos e colocando tudo em lower case.
 
-    user.slug = slugify(`${user.firstName} ${user.lastName}`);
-    user.passwordHash = await bcryptjs.hash(user.passwordHash, 10);
-    user.roleId = { id: 2, name: 'User', slug: 'user' };
-    await this.repository.save(user);
+    const entity = this.repository.create(user);
+    await this.repository.save(entity);
   }
 
   async authenticate(email: string, password: string): Promise<any> {

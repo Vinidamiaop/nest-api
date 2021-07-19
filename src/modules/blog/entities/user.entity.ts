@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -7,6 +8,8 @@ import {
 } from 'typeorm';
 
 import { Role } from './role.entity';
+import * as bcryptjs from 'bcryptjs';
+import { slugify } from 'src/utils/slugify';
 
 @Entity()
 export class User {
@@ -48,4 +51,19 @@ export class User {
   @ManyToOne(() => Role, (role) => role.id, { eager: true })
   @JoinColumn({ name: 'roleId' })
   roleId: Role;
+
+  @BeforeInsert()
+  addUserRole() {
+    this.roleId = { id: 2, name: 'user', slug: 'user' };
+  }
+
+  @BeforeInsert()
+  async passHash() {
+    this.passwordHash = await bcryptjs.hash(this.passwordHash, 10);
+  }
+
+  @BeforeInsert()
+  async slugify() {
+    this.slug = slugify(`${this.firstName} ${this.lastName}`);
+  }
 }
