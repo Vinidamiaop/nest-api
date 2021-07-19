@@ -35,6 +35,7 @@ export class UserService {
 
     user.slug = slugify(`${user.firstName} ${user.lastName}`);
     user.passwordHash = await bcryptjs.hash(user.passwordHash, 10);
+    user.roleId = { id: 2, name: 'User', slug: 'user' };
     await this.repository.save(user);
   }
 
