@@ -5,12 +5,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Role } from './role.entity';
 import * as bcryptjs from 'bcryptjs';
 import { slugify } from 'src/utils/slugify';
+import { Profile } from './profile.entity';
 
 @Entity()
 export class User {
@@ -52,6 +54,10 @@ export class User {
   @ManyToOne(() => Role, (role) => role.id, { eager: true })
   @JoinColumn({ name: 'roleId' })
   roleId: Role;
+
+  @OneToOne(() => Profile, { eager: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'profile' })
+  profile: Profile;
 
   @BeforeInsert()
   addUserRole() {

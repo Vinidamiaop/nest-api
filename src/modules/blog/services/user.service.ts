@@ -32,6 +32,7 @@ export class UserService {
 
   async create(user: CreateUserDto) {
     const entity = this.repository.create(user);
+    console.log(entity);
     await this.repository.save(entity);
   }
 

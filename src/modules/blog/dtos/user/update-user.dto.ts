@@ -1,3 +1,5 @@
+import { Profile } from '../../entities/profile.entity';
+
 export class UpdateUserDto {
   constructor(
     public firstName?: string,
@@ -6,5 +8,6 @@ export class UpdateUserDto {
     public birthDate?: Date,
     public password?: string,
     public slug?: string,
+    public profile?: Profile,
   ) {}
 }

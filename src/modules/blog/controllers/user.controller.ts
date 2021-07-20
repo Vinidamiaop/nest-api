@@ -32,12 +32,15 @@ import { ValidatorInterceptor } from 'src/shared/interceptors/validator.intercep
 import { CreateUserContract } from '../contracts/user/create-user.contract';
 import { AuthUserContract } from '../contracts/user/auth-user.contract';
 import { UpdateUserContract } from '../contracts/user/update-user.contract';
+import { ProfileService } from '../services/profile.service';
+import { Profile } from '../entities/profile.entity';
 
 @Controller('v1/users')
 export class UserController {
   constructor(
     private readonly service: UserService,
     private readonly authService: AuthService,
+    private readonly profileService: ProfileService,
   ) {}
 
   @UseGuards(RolesAuthGuard)
@@ -83,6 +86,10 @@ export class UserController {
   @Post()
   async create(@Body() model: CreateUserDto) {
     try {
+      const profile = new Profile();
+      await this.profileService.create(profile);
+      model.profile = profile;
+
       await this.service.create(model);
       return new ResultDto(null, true, model, null);
     } catch (error) {
