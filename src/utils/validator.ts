@@ -32,6 +32,13 @@ export class Validator {
     }
   }
 
+  hasOnlyLetters(value: string, message: string) {
+    const reg = new RegExp(/[^-a-zа-я\u0370-\u03ff\u1f00-\u1fff]+/g);
+    if (reg.test(value)) {
+      this.errors.push(message);
+    }
+  }
+
   clear() {
     this.errors = [];
   }

@@ -14,7 +14,7 @@ import { Role } from 'src/shared/enums/role.enum';
 import { RolesAuthGuard } from 'src/shared/guards/roles-auth.guard';
 import { ValidatorInterceptor } from 'src/shared/interceptors/validator.interceptor';
 import { CreateRoleContract } from '../contracts/role/create-role.contract';
-import { RoleDto } from '../dtos/role.dto';
+import { RoleDto } from '../dtos/role/role.dto';
 import { RoleService } from '../services/role.service';
 
 @Controller('v1/roles')

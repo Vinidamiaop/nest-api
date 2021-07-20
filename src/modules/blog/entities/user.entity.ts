@@ -1,5 +1,6 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -58,12 +59,20 @@ export class User {
   }
 
   @BeforeInsert()
+  @BeforeUpdate()
   async passHash() {
     this.passwordHash = await bcryptjs.hash(this.passwordHash, 10);
   }
 
   @BeforeInsert()
+  @BeforeUpdate()
   async slugify() {
-    this.slug = slugify(`${this.firstName} ${this.lastName}`);
+    if (!this.slug) {
+      if (this.firstName && this.lastName) {
+        this.slug = slugify(`${this.firstName} ${this.lastName}`);
+      }
+    } else {
+      this.slug = slugify(this.slug);
+    }
   }
 }

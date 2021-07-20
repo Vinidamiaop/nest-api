@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Validator } from 'src/utils/validator';
-import { RoleDto } from '../../dtos/role.dto';
+import { RoleDto } from '../../dtos/role/role.dto';
 import { Contract } from '../contract';
 
 @Injectable()

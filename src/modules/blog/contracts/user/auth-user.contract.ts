@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Validator } from 'src/utils/validator';
-import { LoginUserDto } from '../../dtos/login-user.dto';
+import { LoginUserDto } from '../../dtos/user/login-user.dto';
 import { Contract } from '../contract';
 
 @Injectable()

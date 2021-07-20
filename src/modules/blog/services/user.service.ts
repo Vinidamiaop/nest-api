@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { CreateUserDto } from '../dtos/user/create-user.dto';
 import { User } from '../entities/user.entity';
 import * as bcryptjs from 'bcryptjs';
+import { UpdateUserDto } from '../dtos/user/update-user.dto';
+import { UpdateAdminDto } from '../dtos/user/update-admin.dto';
 
 @Injectable()
 export class UserService {
@@ -29,11 +31,19 @@ export class UserService {
   }
 
   async create(user: CreateUserDto) {
-    // TODO: Criar uma função para criar slugs
-    // tirando os acentos e colocando tudo em lower case.
-
     const entity = this.repository.create(user);
     await this.repository.save(entity);
+  }
+
+  async update(id: number, user: UpdateUserDto) {
+    const entity = this.repository.create(user);
+    await this.repository.update({ id: id }, entity);
+  }
+
+  async updateAsAdmin(id: number, user: UpdateAdminDto) {
+    const entity = this.repository.create(user);
+
+    await this.repository.update({ id: id }, entity);
   }
 
   async authenticate(email: string, password: string): Promise<any> {
@@ -58,5 +68,14 @@ export class UserService {
     } else {
       return null;
     }
+  }
+
+  async delete(id: number) {
+    const user = await this.repository.findOne({ id: id });
+    if (!user) {
+      throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
+    }
+
+    await this.repository.delete(user);
   }
 }

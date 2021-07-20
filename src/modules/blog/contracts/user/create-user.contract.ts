@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Validator } from 'src/utils/validator';
-import { CreateUserDto } from '../../dtos/create-user.dto';
+import { CreateUserDto } from '../../dtos/user/create-user.dto';
 import { Contract } from '../contract';
 
 @Injectable()
@@ -18,6 +18,7 @@ export class CreateUserContract implements Contract {
       'Senha precisa ter mais de 6 caracteres.',
     );
     validator.isEmail(model.email, 'Email inválido.');
+    validator.hasOnlyLetters(model.slug, 'Slug pode conter apenas letras.');
     this.errors = validator.errors;
     return validator.isValid();
   }
