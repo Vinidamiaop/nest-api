@@ -18,9 +18,11 @@ import { Roles } from 'src/shared/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 
 import { User } from '../entities/user.entity';
+import { Profile } from '../entities/profile.entity';
 
 import { AuthService } from 'src/shared/services/auth.service';
 import { UserService } from '../services/user.service';
+import { ProfileService } from '../services/profile.service';
 
 import { CreateUserDto } from '../dtos/user/create-user.dto';
 import { LoginUserDto } from '../dtos/user/login-user.dto';
@@ -32,8 +34,6 @@ import { ValidatorInterceptor } from 'src/shared/interceptors/validator.intercep
 import { CreateUserContract } from '../contracts/user/create-user.contract';
 import { AuthUserContract } from '../contracts/user/auth-user.contract';
 import { UpdateUserContract } from '../contracts/user/update-user.contract';
-import { ProfileService } from '../services/profile.service';
-import { Profile } from '../entities/profile.entity';
 
 @Controller('v1/users')
 export class UserController {
@@ -62,6 +62,7 @@ export class UserController {
       );
     }
   }
+
   @UseGuards(RolesAuthGuard)
   @Roles(Role.Admin, Role.Editor, Role.User)
   @Get('/show')
