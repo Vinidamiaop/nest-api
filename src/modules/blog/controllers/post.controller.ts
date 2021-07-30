@@ -22,6 +22,7 @@ import { ValidatorReqInterceptor } from 'src/shared/interceptors/validator-req.i
 import { ValidatorInterceptor } from 'src/shared/interceptors/validator.interceptor';
 import { CreatePostContract } from '../contracts/posts/create-post.contract';
 import { PaginateContract } from '../contracts/posts/paginate.contract';
+import { UpdatePostContract } from '../contracts/posts/update-post.contract';
 import { CreatePostDto } from '../dtos/post/create-post.dto';
 import { PaginationResultDto } from '../dtos/post/PaginationResult.dto';
 import { PostService } from '../services/post.service';
@@ -108,6 +109,7 @@ export class PostController {
     }
   }
 
+  @UseInterceptors(new ValidatorInterceptor(new UpdatePostContract()))
   @UseGuards(RolesAuthGuard)
   @Roles(Role.Admin, Role.Editor)
   @Put('/:id')
@@ -135,7 +137,7 @@ export class PostController {
   async delete(@Param('id') id, @Req() req) {
     try {
       await this.postService.delete(id, req);
-      return new ResultDto('Post exclído com sucesso', true, null, null);
+      return new ResultDto('Post excluído com sucesso', true, null, null);
     } catch (error) {
       throw new HttpException(
         new ResultDto(
