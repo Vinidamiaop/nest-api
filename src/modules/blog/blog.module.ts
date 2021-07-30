@@ -21,6 +21,9 @@ import { UserService } from './services/user.service';
 import { RoleService } from './services/role.service';
 import { ProfileService } from './services/profile.service';
 import { CategoryService } from './services/category.service';
+import { Post } from './entities/post.entity';
+import { PostController } from './controllers/post.controller';
+import { PostService } from './services/post.service';
 
 @Module({
   imports: [
@@ -34,19 +37,21 @@ import { CategoryService } from './services/category.service';
         expiresIn: '1d',
       },
     }),
-    TypeOrmModule.forFeature([User, Role, Profile, Category]),
+    TypeOrmModule.forFeature([User, Role, Profile, Category, Post]),
   ],
   controllers: [
     UserController,
     RoleController,
     ProfileController,
     CategoryController,
+    PostController,
   ],
   providers: [
     UserService,
     RoleService,
     ProfileService,
     CategoryService,
+    PostService,
     AuthService,
     JwtStrategy,
   ],

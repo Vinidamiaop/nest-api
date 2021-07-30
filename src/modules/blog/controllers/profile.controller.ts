@@ -29,7 +29,7 @@ export class ProfileController {
     try {
       const user = await this.userService.findById(req.user.id);
       await this.profileService.update(user.profile.id, model);
-      return new ResultDto(null, false, model, null);
+      return new ResultDto(null, true, model, null);
     } catch (error) {
       throw new HttpException(
         new ResultDto(

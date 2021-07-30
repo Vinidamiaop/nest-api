@@ -29,6 +29,7 @@ export class UpdateUserContract implements Contract {
       validator.hasOnlyLetters(model.slug, 'Slug pode conter apenas letras.');
 
     this.errors = validator.errors;
+
     return validator.isValid();
   }
 }

@@ -33,10 +33,12 @@ export function slugify(str: string): string {
     str = str.replace(new RegExp(set.from, 'gi'), set.to);
   });
 
-  return str
-    .replace(/\s+/g, '-') // Replace spaces with -
-    .replace(/[^-a-zа-я\u0370-\u03ff\u1f00-\u1fff]+/g, '') // Remove all non-word chars
-    .replace(/--+/g, '-') // Replace multiple - with single -
-    .replace(/^-+/, '') // Trim - from start of text
-    .replace(/-+$/, ''); // Trim - from end of text
+  return (
+    str
+      .replace(/\s+/g, '-') // Replace spaces with -
+      // .replace(/[^-a-zа-я\u0370-\u03ff\u1f00-\u1fff]+/g, '') // Remove all non-word chars
+      .replace(/--+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start of text
+      .replace(/-+$/, '')
+  ); // Trim - from end of text
 }

@@ -18,7 +18,7 @@ export class UserService {
     return await this.repository.find();
   }
 
-  async findById(id: string): Promise<User | undefined> {
+  async findById(id: number): Promise<User | undefined> {
     return await this.repository.findOne({
       where: { id: id },
     });
@@ -32,19 +32,19 @@ export class UserService {
 
   async create(user: CreateUserDto) {
     const entity = this.repository.create(user);
-    console.log(entity);
     await this.repository.save(entity);
   }
 
   async update(id: number, user: UpdateUserDto) {
     const entity = this.repository.create(user);
-    await this.repository.update({ id: id }, entity);
+    entity.id = id;
+    return await this.repository.save(entity);
   }
 
   async updateAsAdmin(id: number, user: UpdateAdminDto) {
     const entity = this.repository.create(user);
-
-    await this.repository.update({ id: id }, entity);
+    entity.id = id;
+    return await this.repository.save(entity);
   }
 
   async authenticate(email: string, password: string): Promise<any> {

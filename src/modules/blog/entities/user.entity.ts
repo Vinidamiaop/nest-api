@@ -62,12 +62,21 @@ export class User {
   @BeforeInsert()
   addUserRole() {
     this.roleId = { id: 2, name: 'user', slug: 'user' };
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
   }
 
   @BeforeInsert()
   @BeforeUpdate()
   async passHash() {
-    this.passwordHash = await bcryptjs.hash(this.passwordHash, 10);
+    if (this.passwordHash) {
+      this.passwordHash = await bcryptjs.hash(this.passwordHash, 10);
+    }
+  }
+
+  @BeforeUpdate()
+  async updatedAtFunc() {
+    this.updatedAt = new Date();
   }
 
   @BeforeInsert()

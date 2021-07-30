@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   Request,
   UseGuards,
   UseInterceptors,
@@ -110,7 +111,7 @@ export class UserController {
   @UseGuards(RolesAuthGuard)
   @Roles(Role.Admin, Role.Editor, Role.User)
   @Put()
-  async updateUser(@Body() model: UpdateUserDto, @Request() req) {
+  async updateUser(@Body() model: UpdateUserDto, @Req() req) {
     try {
       await this.service.update(req.user.id, model);
       return new ResultDto(null, true, model, null);
@@ -131,9 +132,10 @@ export class UserController {
   @UseGuards(RolesAuthGuard)
   @Roles(Role.Admin)
   @Put('/:id')
-  async updateAsAdmin(@Body() model: UpdateAdminDto, @Param('id') id) {
+  async updateAdmin(@Param('id') id: number, @Body() model: UpdateAdminDto) {
     try {
-      await this.service.updateAsAdmin(id, model);
+      await this.service.updateAsAdmin(Number(id), model);
+
       return new ResultDto(null, true, model, null);
     } catch (error) {
       throw new HttpException(
