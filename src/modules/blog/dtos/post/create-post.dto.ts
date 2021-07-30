@@ -6,8 +6,8 @@ export class CreatePostDto {
     public author: User,
     public title: string,
     public summary: string,
-    public image: string,
     public body: string,
+    public image?: string,
     public slug?: string,
     public category?: Category,
   ) {}

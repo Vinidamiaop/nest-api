@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from 'src/shared/enums/role.enum';
 import { Repository } from 'typeorm';
 import { CreatePostDto } from '../dtos/post/create-post.dto';
+import { PaginateDto } from '../dtos/post/paginate.dto';
 import { UpdatePostDto } from '../dtos/post/update-post.dto';
 import { Post } from '../entities/post.entity';
 import { UserService } from './user.service';
@@ -26,10 +27,14 @@ export class PostService {
     return await this.repository.save(entity);
   }
 
-  async findAll() {
-    return await this.repository.find({
-      order: { createdAt: 'DESC' },
+  async findAll(options: PaginateDto) {
+    if (!options.skip) options.skip = 0;
+    if (!options.take) options.take = 25;
+    return await this.repository.findAndCount({
+      order: { createdAt: 'ASC' },
       loadRelationIds: true,
+      skip: options.skip * options.take || 0,
+      take: options.take,
     });
   }
 
@@ -51,7 +56,19 @@ export class PostService {
     if (post.author !== req.user.id && req.user.role !== Role.Admin)
       throw new UnauthorizedException();
     const entity = this.repository.create(model);
-
     return await this.repository.update(id, entity);
+  }
+
+  async delete(id: number, req: any) {
+    const post = await this.repository.findOne(
+      { id },
+      { loadRelationIds: true },
+    );
+    if (!post) throw new NotFoundException();
+
+    if (post.author !== req.user.id && req.user.role !== Role.Admin)
+      throw new UnauthorizedException();
+
+    return await this.repository.delete(id);
   }
 }

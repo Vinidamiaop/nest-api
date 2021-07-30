@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/user/create-user.dto';
@@ -37,14 +42,14 @@ export class UserService {
 
   async update(id: number, user: UpdateUserDto) {
     const entity = this.repository.create(user);
-    entity.id = id;
-    return await this.repository.save(entity);
+    return await this.repository.update(id, entity);
   }
 
-  async updateAsAdmin(id: number, user: UpdateAdminDto) {
-    const entity = this.repository.create(user);
-    entity.id = id;
-    return await this.repository.save(entity);
+  async updateAsAdmin(id: number, model: UpdateAdminDto) {
+    const user = await this.repository.findOne({ id });
+    if (!user) throw new NotFoundException();
+    const entity = this.repository.create(model);
+    return await this.repository.update(id, entity);
   }
 
   async authenticate(email: string, password: string): Promise<any> {

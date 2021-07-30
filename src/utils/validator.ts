@@ -39,6 +39,12 @@ export class Validator {
     }
   }
 
+  hasMaxValue(value, max, message) {
+    if (value > max) {
+      this.errors.push(message);
+    }
+  }
+
   clear() {
     this.errors = [];
   }

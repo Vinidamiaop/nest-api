@@ -9,7 +9,7 @@ export class AuthUserContract implements Contract {
 
   validate(model: LoginUserDto): boolean {
     const validator = new Validator();
-
+    console.log(model.password);
     validator.hasMinLen(
       model.password,
       6,

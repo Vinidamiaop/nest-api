@@ -11,14 +11,14 @@ import { Contract } from 'src/modules/blog/contracts/contract';
 import { ResultDto } from '../dtos/result.dto';
 
 @Injectable()
-export class ValidatorInterceptor implements NestInterceptor {
+export class ValidatorReqInterceptor implements NestInterceptor {
   constructor(public contract: Contract) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const body = context.switchToHttp().getRequest().body;
+    const req = context.switchToHttp().getRequest().query;
 
-    const validBody = this.contract.validate(body);
+    const validReq = this.contract.validate(req);
 
-    if (!validBody) {
+    if (!validReq) {
       throw new HttpException(
         new ResultDto(
           'Something went wrong.',
