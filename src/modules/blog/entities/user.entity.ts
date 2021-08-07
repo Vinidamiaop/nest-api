@@ -55,7 +55,7 @@ export class User {
   @JoinColumn({ name: 'roleId' })
   roleId: Role;
 
-  @OneToOne(() => Profile, { eager: true, onDelete: 'CASCADE' })
+  @OneToOne(() => Profile, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'profile' })
   profile: Profile;
 

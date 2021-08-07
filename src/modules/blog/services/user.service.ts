@@ -20,18 +20,20 @@ export class UserService {
   ) {}
 
   async get(): Promise<User[]> {
-    return await this.repository.find();
+    return await this.repository.find({ loadRelationIds: true });
   }
 
   async findById(id: number): Promise<User | undefined> {
     return await this.repository.findOne({
       where: { id: id },
+      loadRelationIds: true,
     });
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
     return await this.repository.findOne({
       where: { email: email },
+      loadRelationIds: true,
     });
   }
 
