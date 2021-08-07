@@ -1,3 +1,4 @@
+import path from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -24,11 +25,19 @@ import { CategoryService } from './services/category.service';
 import { Post } from './entities/post.entity';
 import { PostController } from './controllers/post.controller';
 import { PostService } from './services/post.service';
+import { MulterModule } from '@nestjs/platform-express';
+import { ImageController } from './controllers/image.controller';
+import { ImageService } from './services/image.service';
+import { Image } from './entities/image.entity';
+import { MulterConfigService } from 'src/shared/services/multer-config.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+    }),
+    MulterModule.registerAsync({
+      useClass: MulterConfigService,
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
@@ -37,7 +46,7 @@ import { PostService } from './services/post.service';
         expiresIn: '1d',
       },
     }),
-    TypeOrmModule.forFeature([User, Role, Profile, Category, Post]),
+    TypeOrmModule.forFeature([User, Role, Profile, Category, Post, Image]),
   ],
   controllers: [
     UserController,
@@ -45,6 +54,7 @@ import { PostService } from './services/post.service';
     ProfileController,
     CategoryController,
     PostController,
+    ImageController,
   ],
   providers: [
     UserService,
@@ -52,6 +62,7 @@ import { PostService } from './services/post.service';
     ProfileService,
     CategoryService,
     PostService,
+    ImageService,
     AuthService,
     JwtStrategy,
   ],

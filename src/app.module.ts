@@ -1,12 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
 import { BlogModule } from './modules/blog/blog.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, 'uploads'),
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
